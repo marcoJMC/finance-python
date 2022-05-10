@@ -17,18 +17,41 @@ class finance__tests():
 
     def search_xpath(self, xpath):
         return self.driver.find_element(By.XPATH, xpath)
+    
+    def search_class(self, classname):
+        return self.driver.find_element(By.CLASS_NAME, classname)
 
     def login(self,user,password):
-        
-        login_username = self.search_xpath("/html/body/main/form/div[1]/input")
-        login_username.send_keys(user)
+        #self.search_xpath("")
+        try:
+            login_username = self.search_xpath("/html/body/main/form/div[1]/input")
+            login_username.send_keys(user)
             
-        login_password = self.search_xpath("/html/body/main/form/div[2]/input")
-        login_password.send_keys(password)
+            login_password = self.search_xpath("/html/body/main/form/div[2]/input")
+            login_password.send_keys(password)
             
-        login_button = self.search_xpath("/html/body/main/form/button")
-        login_button.click()
-        time.sleep(3)
+            login_button = self.search_xpath("/html/body/main/form/button")
+            login_button.click()
+            time.sleep(3)
+            
+            texto_exito = "Welcome back " + user;
+            texto = self.search_class("alert").text
+            texto_error_uno = "invalid username and/or password"
+            texto_error_dos = "You must provide a password"
+            texto_error_tres = "You must provide a username"
+
+            if texto==texto_exito:
+                print("Login exitoso")
+            elif texto == texto_error_uno:
+                print("Usuario o contraseña incorrectos")
+            elif texto == texto_error_dos:
+                print("Ingrese la contraseña")
+            elif texto == texto_error_tres:
+                print("Ingrese el usuario")
+            else:
+                print("Error en el login")
+        except:
+            print("Error de ejecución")
     
     def register(self,name,last_name,user,email,password,phone,birthday,cc,exp,cvv):
         try:
@@ -204,25 +227,3 @@ class finance__tests():
     
     def navigate_end(self):
         self.driver.close()
-
-
-url = "https://vamonos-finance.herokuapp.com"
-user = finance__tests()
-user.navigate_page(url)
-user.register("Marco", "Martínez", "userM3", "mjmc@gmail.com", "12345678",
-              "8112591387", "08/05/1998", "1234567891231231", "05/06", "123")
-user.login("userM3","12345678")
-user.quote("appl")
-user.quote("MSFT")
-user.quote("msft")
-user.quote("abcd")
-user.buy("appl",1)
-user.buy("MSFT",1)
-user.buy("msft",1)
-user.buy("abcd",1)
-user.sell("appl",1)
-user.sell("MSFT",1)
-user.sell("msft",1)
-user.sell("abcd",1)
-user.logout()
-user.navigate_end()
